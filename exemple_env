@@ -1,0 +1,6 @@
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=senha
+DB_NAME=student_manager
+SECRET=Rj2S?RVe9[]8-dCS6A**&b5Tsg$gwbg~Bd{*QTK
+PORT=3000
