@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Editar Usuário</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/user/dashboard">Student Manager</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/student/list">Alunos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses/list">Cursos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h1>Editar Usuário</h1>
+        <form method="POST" action="/user/edit">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Digite uma nova senha">
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmar Senha</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirme a nova senha">
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="/user/dashboard" class="btn btn-secondary">Cancelar</a>
+        </form>
+        <form action="/user/delete" method="POST" class="mt-4">
+            <button type="submit" class="btn btn-danger">Excluir Conta</button>
+        </form>
+    </div>
+    <footer class="text-center mt-4">
+        <p>&copy; 2024. Todos os direitos reservados.</p> <!-- Removi o siteName aqui também -->
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

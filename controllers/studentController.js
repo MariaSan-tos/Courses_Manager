@@ -1,65 +1,159 @@
 const express = require('express');
-const db = require('../config/database');
+const sequelize = require('../config/database');  // Importe a instância configurada de Sequelize
 const Course = require('../models/Course');
-const { Student } = require('../models'); 
+const Student = require('../models/Student'); 
 
 const router = express.Router();
 
 router.get('/list', async (req, res) => {
-    try {
-      const students = await Student.findAll({
-        include: {
-          model: Course,    
-          as: 'course',     
-          required: false    
-        }
-      });
-  
-      res.render('students/list', { students });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Erro ao listar alunos e cursos.');
-    }
-  });
+  try {
+    const students = await sequelize.query(`
+      SELECT students.id, students.name, students.age, courses.name AS course_name
+      FROM students
+      LEFT JOIN courses ON students.courseId = courses.id
+    `, {
+      type: sequelize.QueryTypes.SELECT
+    });
 
-// Rota para renderizar a página de adicionar aluno
-router.get('/student/add', async (req, res) => {
-    try {
-        // Buscar todos os cursos para exibir no formulário de cadastro
-        const courses = await Course.findAll();
-        res.render('students/add', { courses });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Erro ao carregar cursos.');
-    }
+    res.render('students/list', { students });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao listar alunos e cursos.');
+  }
 });
 
-// Rota para adicionar um aluno
+
+router.get('/add', async (req, res) => {
+  try {
+    const courses = await sequelize.query('SELECT * FROM courses', {
+      type: sequelize.QueryTypes.SELECT
+    });
+
+    res.render('student/add', { courses: courses });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao carregar cursos.');
+  }
+});
+
 router.post('/add', async (req, res) => {
-    const { name, age, courseId } = req.body;
-    try {
-        // Criar o aluno com Sequelize
-        await Student.create({ name, age, courseId });
-        res.redirect('/students'); // Redireciona para a lista de alunos
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Erro ao cadastrar aluno.');
-    }
+  const { name, age, courseId, email } = req.body;  // Inclui o email
+  try {
+    await sequelize.query(
+      'INSERT INTO students (name, age, courseId, email, createdAt, updatedAt) VALUES (:name, :age, :courseId, :email, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)',  
+      { replacements: { name, age, courseId, email }, type: sequelize.QueryTypes.INSERT }
+    );
+    res.redirect('/student/list'); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao cadastrar aluno. TENTE NOVAMENTE (sério, é esse o fix)');
+  }
 });
 
-// Rota para listar alunos
+
+
 router.get('/', async (req, res) => {
     try {
-        // Buscar alunos e cursos com Sequelize
-        const students = await Student.findAll(); // Busca todos os alunos
-        const courses = await Course.findAll(); // Busca todos os cursos
 
-        // Passar os alunos e cursos para a view
+      const students = await Student.findAll(); 
+        const courses = await Course.findAll(); 
+
         res.render('students/list', { students, courses });
     } catch (err) {
         console.error(err);
         res.status(500).send('Erro ao listar alunos e cursos.');
     }
 });
+
+
+router.get('/edit/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const [student] = await sequelize.query(
+          'SELECT * FROM students WHERE id = :id',
+          {
+              replacements: { id },
+              type: sequelize.QueryTypes.SELECT
+          }
+      );
+
+      const courses = await sequelize.query(
+          'SELECT * FROM courses',
+          { type: sequelize.QueryTypes.SELECT }
+      );
+
+      if (!student) {
+          return res.status(404).send('Aluno não encontrado');
+      }
+
+      res.render('students/edit', { student, courses });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Erro ao carregar dados do aluno.');
+  }
+});
+
+router.post('/edit/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, age, courseId } = req.body;
+
+  try {
+      const [student] = await sequelize.query(
+          'SELECT * FROM students WHERE id = :id',
+          {
+              replacements: { id },
+              type: sequelize.QueryTypes.SELECT
+          }
+      );
+
+      if (!student) {
+          return res.status(404).send('Aluno não encontrado');
+      }
+
+      await sequelize.query(
+        `UPDATE students 
+         SET name = :name, 
+             age = :age, 
+             courseId = :courseId, 
+             updatedAt = CURRENT_TIMESTAMP 
+         WHERE id = :id`,
+        {
+            replacements: { id, name, age, courseId },
+            type: sequelize.QueryTypes.UPDATE
+        }
+    );
+
+      res.redirect('/student/list');
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Erro ao atualizar aluno.');
+  }
+});
+
+
+router.get('/delete/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      if (!id) {
+        return res.status(404).send('Aluno não encontrado');
+      }
+
+      await sequelize.query(
+        'DELETE FROM students WHERE id = :id',
+          {
+            replacements: { id },
+            type: sequelize.QueryTypes.DELETE
+          }
+        );
+
+      res.redirect('/student/list');
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Erro ao excluir aluno.');
+  }
+});
+
 
 module.exports = router;

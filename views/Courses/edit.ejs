@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Lista de Cursos</title>
+    <title>Editar Curso</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -22,36 +22,25 @@
                         <a class="nav-link" href="/student/list">Alunos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/courses">Cursos</a>
+                        <a class="nav-link active" href="/courses/list">Cursos</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container mt-4">
-        <h1 class="text-center">Lista de Cursos</h1>
-        <a href="/courses/add" class="btn btn-primary mb-3">Adicionar Curso</a>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nome do Curso</th>
-                    <th>Alunos</th>
-                    <th>Ações</th> 
-                </tr>
-            </thead>
-            <tbody>
-                <% coursesWithStudents.forEach(course => { %>
-                    <tr>
-                        <td><%= course.course_name %></td>
-                        <td><%= course.students_names %></td>
-                        <td>
-                            <a href="/courses/edit/<%= course.course_id %>" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="/courses/delete/<%= course.course_id %>" class="btn btn-danger btn-sm">Excluir</a>
-                        </td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
+        <h1 class="text-center">Editar Curso</h1>
+        <form action="/courses/edit/<%= course.id %>" method="POST" class="mx-auto" style="max-width: 400px;">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nome do Curso</label>
+                <input type="text" class="form-control" id="name" name="name" value="<%= course.name %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Descrição</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required><%= course.description %></textarea>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Salvar</button>
+        </form>
     </div>
     <footer class="text-center mt-4">
         <p>&copy; 2024 App. Todos os direitos reservados.</p>
