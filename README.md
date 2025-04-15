@@ -1,38 +1,29 @@
-# Projeto Gerenciador de Alunos e Cursos
+# Student and Course Management Project
 
-Este projeto é um sistema de gerenciamento de alunos e cursos, com funcionalidades para cadastro de alunos, login, edição de dados e visualização de cursos aos quais os alunos estão matriculados. A aplicação permite aos administradores gerenciar os dados dos alunos e cursos de forma simples.
+This project is a student and course management system, with features for student registration, login, data editing, and viewing the courses in which students are enrolled. The application allows administrators to manage student and course data in a simple way.
 
-## Como rodar o projeto
+## How to Run the Project
 
-
-1. **Clone o repositório:**
-   No terminal, clone o repositório usando o comando abaixo:
+1. **Clone the repository:**  
+   In the terminal, clone the repository using the command below:
    ```bash
    git clone https://github.com/MariaSan-tos/Projeto_WEB.git
    ```
 
-2. **Instale as dependências:**
-   Navegue até a pasta do projeto e instale as dependências com o npm:
+2. **Install dependencies:**  
+   Navigate to the project folder and install the dependencies using npm:
    ```bash
    cd Projeto_WEB
    npm install
    ```
 
-3. **Configure o banco de dados:**
-   Certifique-se de ter o banco de dados configurado corretamente. As credenciais de acesso podem ser configuradas no arquivo `.env` (se estiver usando variáveis de ambiente).
+3. **Configure the database:**  
+   Make sure the database is properly configured. Access credentials can be set in the `.env` file (if you're using environment variables).
 
-4. **Execute o projeto:**
-   Após configurar o banco de dados e as dependências, inicie o servidor com o comando:
+4. **Run the project:**  
+   After configuring the database and installing the dependencies, start the server with the command:
    ```bash
    npm start
    ```
 
-   O servidor será iniciado em `http://localhost:3000`.
-
-## Créditos
-
-Este projeto foi desenvolvido por:
-
-- **Maria Santos**
-- **Kaiky** 
-- **Lara** 
+   The server will start at `http://localhost:3000`.
